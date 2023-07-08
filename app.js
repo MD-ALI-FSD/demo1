@@ -1,3 +1,10 @@
-const items = document.querySelector(".list-group");
-items.style.fontWeight = "bold";
-items.children[2].style.color = "blue";
+const it = document.querySelectorAll(".list-group");
+
+it.lastElementChild.style.textContent = "blue";
+
+// }
+
+// items.style.color = "blue";
+
+const itemsss = document.querySelector(".container");
+itemsss.style.backgroundColor = "blue";
