@@ -1,68 +1,45 @@
-var form = document.getElementById("addForm");
-var itemList = document.getElementById("items");
-var filter = document.getElementById("filter");
+const signUp = (e) => {
+  let fname = document.getElementById("fname").value,
+    lname = document.getElementById("lname").value,
+    email = document.getElementById("email").value,
+    pwd = document.getElementById("pwd").value;
 
-// Form submit event
-form.addEventListener("submit", addItem);
-// Delete event
-itemList.addEventListener("click", removeItem);
-// Filter event
-filter.addEventListener("keyup", filterItems);
+  let formData = JSON.parse(localStorage.getItem("formData")) || [];
 
-// Add item
-function addItem(e) {
-  e.preventDefault();
+  let exist =
+    formData.length &&
+    JSON.parse(localStorage.getItem("formData")).some(
+      (data) =>
+        data.fname.toLowerCase() == fname.toLowerCase() &&
+        data.lname.toLowerCase() == lname.toLowerCase()
+    );
 
-  // Get input value
-  var newItem = document.getElementById("item").value;
-  localStorage.addItem = newItem;
-
-  // Create new li element
-  var li = document.createElement("li");
-  // Add class
-  li.className = "list-group-item";
-  // Add text node with input value
-  li.appendChild(document.createTextNode(newItem));
-
-  // Create del button element
-  var deleteBtn = document.createElement("button");
-
-  // Add classes to del button
-  deleteBtn.className = "btn btn-danger btn-sm float-right delete";
-
-  // Append text node
-  deleteBtn.appendChild(document.createTextNode("X"));
-
-  // Append button to li
-  li.appendChild(deleteBtn);
-
-  // Append li to list
-  itemList.appendChild(li);
-}
-
-// Remove item
-function removeItem(e) {
-  if (e.target.classList.contains("delete")) {
-    if (confirm("Are You Sure?")) {
-      var li = e.target.parentElement;
-      itemList.removeChild(li);
-    }
+  if (!exist) {
+    formData.push({ fname, lname, email, pwd });
+    localStorage.setItem("formData", JSON.stringify(formData));
+    document.querySelector("form").reset();
+    document.getElementById("fname").focus();
+    alert("Account Created.\n\nPlease Sign In using the link below.");
+  } else {
+    alert("Ooopppssss... Duplicate found!!!\nYou have already sigjned up");
   }
-}
+  e.preventDefault();
+};
 
-// Filter Items
-function filterItems(e) {
-  // convert text to lowercase
-  var text = e.target.value.toLowerCase();
-  // Get lis
-  var items = itemList.getElementsByTagName("li");
-  // Convert to an array
-  Array.from(items).forEach(function (item) {
-    var itemName = item.firstChild.textContent;
-    if (itemName.toLowerCase().indexOf(text) != -1) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
+function signIn(e) {
+  let email = document.getElementById("email").value,
+    pwd = document.getElementById("pwd").value;
+  let formData = JSON.parse(localStorage.getItem("formData")) || [];
+  let exist =
+    formData.length &&
+    JSON.parse(localStorage.getItem("formData")).some(
+      (data) =>
+        data.email.toLowerCase() == email && data.pwd.toLowerCase() == pwd
+    );
+  if (!exist) {
+    alert("Incorrect login credentials");
+  } else {
+    location.href = "/";
+  }
+  e.preventDefault();
 }
